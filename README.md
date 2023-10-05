@@ -1,13 +1,14 @@
 # todo-app
 
 ## Для первого запуска приложения
-- make build
+- `cp .dist.env .env`
+- `make build`
 
 ## Для запуска приложения
-- make
+- `make`
 
 ## Для запуска тестов
-- make test
+- `make test`
 
 ## Для генерации swagger
-- make swag
+- `make swag`
