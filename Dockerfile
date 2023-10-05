@@ -1,19 +1,26 @@
-FROM golang
+# Используем базовый образ Golang
+FROM golang:latest
 
-RUN go version
-ENV GOPATH=/
+# Обновляем индексы пакетов
+RUN apt-get update
 
+# Устанавливаем PostgreSQL client и другие необходимые пакеты
+RUN apt-get -y install postgresql-client && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Создаем рабочую директорию внутри контейнера
+WORKDIR /app
+
+# Копируем файлы вашего Go-приложения в контейнер
 COPY ./ ./
 
-# install psql
-RUN apt-get update
-RUN apt-get -y install postgresql-client
-
-# make wait-for-postgres.sh executable
-RUN chmod +x wait-for-postgres.sh
-
-# build go app
+# Устанавливаем зависимости Go
 RUN go mod download
+
+# Собираем Go-приложение внутри контейнера
 RUN go build -o todo-app ./cmd/main.go
 
+# Определяем команду для запуска приложения
 CMD ["./todo-app"]
+

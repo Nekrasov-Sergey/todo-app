@@ -2,21 +2,29 @@ version: '3.8'
 
 services:
   todo-app:
+    restart: always
     build: ./
-    command: ./wait-for-postgres.sh db ./todo-app
+    command: ./todo-app
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DB_PASSWORD=qwerty
 
   db:
     restart: always
     image: postgres:latest
+    healthcheck:
+      test: [ "CMD", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
-      - ./.database/postgres/data:/var/lib/postgresql/data
+      - .database/postgres/data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=qwerty
     ports:
       - "5432:5432"
+
