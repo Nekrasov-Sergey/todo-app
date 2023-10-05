@@ -5,6 +5,8 @@
 .PHONY: build
 build:
 	docker-compose build
+	docker-compose up -d
+	make migrate
 
 .PHONY: run
 run:
